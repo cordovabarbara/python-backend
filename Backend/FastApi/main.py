@@ -10,4 +10,4 @@ def read_root():
 def read_root():
     return {"url": "https://moure.dev/cursos/"}
 
-"""Probando otros url, estados ok, documentacion con  Swagger automaticamente"""
+"""Probando otros url, estados 200 ok, documentacion con  Swagger automaticamente"""

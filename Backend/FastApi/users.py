@@ -19,7 +19,14 @@ users_list = [User(id= 1, name = "Barbara", lastname ="Cordova", url = "https://
 def read_users():
     return users_list
 
+#Path
 @app.get("/user/{id}")
+def read_user(id: int):
+    users = filter(lambda user: user.id == id, users_list)
+    return list(users)[0]
+
+"""Llamar un parametro por query"""
+@app.get("/userquery/")
 def read_user(id: int):
     users = filter(lambda user: user.id == id, users_list)
     return list(users)[0]

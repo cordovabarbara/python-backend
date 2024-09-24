@@ -21,14 +21,19 @@ def read_users():
 
 #Path
 @app.get("/user/{id}")
-def read_user(id: int):
+def read_user(id:int):
     users = filter(lambda user: user.id == id, users_list)
     return list(users)[0]
 
 """Llamar un parametro por query"""
 @app.get("/userquery/")
 def read_user(id: int):
-    users = filter(lambda user: user.id == id, users_list)
-    return list(users)[0]
+      return search_user(id)
 
+def search_user(id:int):
+        users = filter(lambda user: user.id == id, users_list)
+        try:
+            return list(users)[0]
+        except:
+            return{"error": "No se ha encontrado el usuario"}
 

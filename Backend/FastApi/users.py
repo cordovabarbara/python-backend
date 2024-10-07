@@ -29,6 +29,17 @@ def read_user(id:int):
 def read_user(id: int):
       return search_user(id)
 
+'''POST'''
+
+@app.post("/user/")
+def read_users(user: User):
+    if type(search_user(user.id)) == User:
+        return {"error" : "The user already exists"}
+    else:                    
+        users_list.append(user)
+
+
+
 def search_user(id:int):
         users = filter(lambda user: user.id == id, users_list)
         try:

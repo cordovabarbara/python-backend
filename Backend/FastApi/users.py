@@ -37,7 +37,23 @@ def read_users(user: User):
         return {"error" : "The user already exists"}
     else:                    
         users_list.append(user)
+        return user
 
+'''PUT'''
+@app.put("/user/")
+def read_users(user:User):
+
+    found = False
+
+    for index, saved_user in enumerate(users_list):
+        if saved_user.id == user.id:
+            users_list[index] = user
+            found = True
+    if not found:
+        return {"error" : "failed to update user"}
+    else:
+        return user
+    
 
 
 def search_user(id:int):

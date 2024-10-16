@@ -55,6 +55,20 @@ def read_users(user:User):
         return user
     
 
+    '''Delete'''
+@app.get("/user/{id}")
+def read_user(id:int):
+
+    found = False
+
+    for index, saved_user in enumerate(users_list):
+        if saved_user.id == id:
+            del users_list[index]
+            found = True
+    if not found:
+        return {"error": "Error deleting user"}
+
+
 
 def search_user(id:int):
         users = filter(lambda user: user.id == id, users_list)

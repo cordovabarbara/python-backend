@@ -16,23 +16,23 @@ users_list = [User(id= 1, name = "Barbara", lastname ="Cordova", url = "https://
               User(id= 3,name = "Cristobal", lastname ="Lopez", url = "https://barbara-cordova-portfolio.netlify.app/", age = 30)]
 
 @app.get("/users")
-def read_users():
+async def read_users():
     return users_list
 
 #Path
 @app.get("/user/{id}")
-def read_user(id:int):
+async def read_user(id:int):
     return search_user(id)
 
 """Llamar un parametro por query"""
 @app.get("/userquery/")
-def read_user(id: int):
+async def read_user(id: int):
       return search_user(id)
 
 '''POST'''
 
 @app.post("/user/")
-def read_users(user: User):
+async def read_users(user: User):
     if type(search_user(user.id)) == User:
         return {"error" : "The user already exists"}
     else:                    
@@ -41,7 +41,7 @@ def read_users(user: User):
 
 '''PUT'''
 @app.put("/user/")
-def read_users(user:User):
+async def read_users(user: User):
 
     found = False
 
@@ -56,8 +56,8 @@ def read_users(user:User):
     
 
     '''Delete'''
-@app.get("/user/{id}")
-def read_user(id:int):
+@app.delete("/user/{id}")
+async def read_user(id:int):
 
     found = False
 
@@ -65,6 +65,7 @@ def read_user(id:int):
         if saved_user.id == id:
             del users_list[index]
             found = True
+            return {"The user has been successfully deleted"}
     if not found:
         return {"error": "Error deleting user"}
 

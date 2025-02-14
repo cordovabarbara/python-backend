@@ -1,9 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 # inicia el server: uvicorn users:app --reload 
 
-app = FastAPI()
+router = APIRouter()
 
 #Entidad User
 class User(BaseModel):
@@ -17,23 +17,23 @@ users_list = [User(id= 1, name = "Barbara", lastname ="Cordova", url = "https://
               User(id= 2, name = "Anais", lastname ="Aliendo",  url = "https://barbara-cordova-portfolio.netlify.app/", age = 35),
               User(id= 3,name = "Cristobal", lastname ="Lopez", url = "https://barbara-cordova-portfolio.netlify.app/", age = 30)]
 
-@app.get("/users")
+@router.get("/users")
 async def read_users():
     return users_list
 
 #Path
-@app.get("/user/{id}")
+@router.get("/user/{id}")
 async def read_user(id:int):
     return search_user(id)
 
 """Llamar un parametro por query"""
-@app.get("/userquery/")
+@router.get("/userquery/")
 async def read_user(id: int):
       return search_user(id)
 
 '''POST'''
 
-@app.post("/user/", status_code=201)
+@router.post("/user/", status_code=201)
 async def read_users(user: User):
     if type(search_user(user.id)) == User:
         raise HTTPException(status_code=409, detail="The user already exists")
@@ -42,7 +42,7 @@ async def read_users(user: User):
     
 
 '''PUT'''
-@app.put("/user/")
+@router.put("/user/")
 async def read_users(user: User):
 
     found = False
@@ -58,7 +58,7 @@ async def read_users(user: User):
     
 
     '''Delete'''
-@app.delete("/user/{id}")
+@router.delete("/user/{id}")
 async def read_user(id:int):
 
     found = False

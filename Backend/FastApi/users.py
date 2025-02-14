@@ -36,10 +36,10 @@ async def read_user(id: int):
 @app.post("/user/", status_code=201)
 async def read_users(user: User):
     if type(search_user(user.id)) == User:
-        raise HTTPException(status_code=204, detail="The user already exists")
-    else:                    
-        users_list.append(user)
-        return user
+        raise HTTPException(status_code=409, detail="The user already exists")
+    users_list.append(user)
+    return{ "message":"User created successfully", "user": user}
+    
 
 '''PUT'''
 @app.put("/user/")

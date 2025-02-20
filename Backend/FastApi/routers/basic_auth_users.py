@@ -40,7 +40,10 @@ def search_user(username:str):
     for user in users_db:
         if user["username"] == username:
             return UserDB(**user)
-    return None
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="User not Found"
+    )
 
 #Funcion para obtener el usuario actual basado en el token
 async def current_user(token: str = Depends(oauth2)):

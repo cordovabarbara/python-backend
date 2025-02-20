@@ -12,46 +12,63 @@ class User(BaseModel):
     username: str
     fullname: str
     email: str
-    diasble: bool
+    disabled: bool
 
-users_db = {
-    "mouredev":{
-        "username":"brbra",
+class UserDB(User):
+    password:str
+
+users_db = [
+    {
+        "username": "barbara",
         "fullname": "Barbara Cordova",
-        "email":"barbara@gmail.com",
-        "diasble": False,
+        "email": "barbara@gmail.com",
+        "disabled": False,
         "password": "123456"
     },
-        "mouredev":{
-        "username":"brbra2",
-        "fullname": "Barbara aliendo",
-        "email":"cordova@gmail.com",
-        "diasble": False,
+    {
+        "username": "anais",
+        "fullname": "Barbara Aliendo",
+        "email": "cordova@gmail.com",
+        "disabled": False,
         "password": "789456"
     }
-}
+]
 
+
+#Funcion para buscar un usuario en la base de datos
 def search_user(username:str):
-    if username in users_db:
-        return users_db(users_db[username])
+    for user in users_db:
+        if user["username"] == username:
+            return UserDB(**user)
+    return None
 
-async def current_user(token:str = Depends(oauth2)):
+#Funcion para obtener el usuario actual basado en el token
+async def current_user(token: str = Depends(oauth2)):
     user = search_user(token)
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="the password is not correct")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate":"Bearer"})
+    return user
 
-
+#ruta para el login
 @app.post("/login")
 async def login(form: OAuth2PasswordRequestForm = Depends()):
-    user_db = users_db.get(form.username)
-    if not users_db:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="The user it's not correct")
-
     user = search_user(form.username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="The user it's not correct")
+
     if not form.password == user.password:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The password is incorrect")
+        raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="The password is incorrect"
+        )
     return {"access_token": user.username, "token_type": "bearer"}
 
+# Ruta para obtener los datos del usuario actual
 @app.get("/user/me")
 async def me(user: User = Depends(current_user)):
     return user
